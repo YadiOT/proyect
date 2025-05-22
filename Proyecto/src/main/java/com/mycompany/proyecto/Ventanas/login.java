@@ -45,7 +45,7 @@ public class login extends JFrame {
                 g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
                 // Cargar la imagen de fondo
-                ImageIcon backgroundImage = new ImageIcon("C:\\Users\\Usuario\\Documents\\NetBeansProjects\\SistemaControlPrestamoLab\\otro fondo.jpg");
+                ImageIcon backgroundImage = new ImageIcon("C:\\Users\\Usuario\\Documents\\NetBeansProjects\\SistemaControlPrestamoLab\\salesiana.jpeg");
                 if (backgroundImage.getIconWidth() == -1) {
                     System.err.println("No se pudo cargar la imagen de fondo.");
                     // Fondo de respaldo (degradado moderno)
