@@ -13,6 +13,10 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import com.mycompany.proyecto.clases.Usuario;
 import com.mycompany.proyecto.Controles.ControlUsuario;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import javax.imageio.ImageIO;
+
 /**
  *
  * @author Usuario
@@ -33,16 +37,36 @@ public class NuevoUsuario extends JFrame {
         setMinimumSize(new Dimension(600, 600)); // Reducimos la altura de la ventana
         setResizable(true); // Permitimos redimensionar la ventana
 
-        // Fondo con degradado
+        // Fondo con imagen
         JPanel fondoPanel = new JPanel() {
+            private BufferedImage backgroundImage;
+
+            {
+                try {
+                    // Cargar la imagen desde la ruta especificada
+                    backgroundImage = ImageIO.read(new File("C:\\Users\\Usuario\\Documents\\NetBeansProjects\\SistemaControlPrestamoLab/universidad.jpeg"));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    backgroundImage = null; // En caso de error, no usar imagen
+                }
+            }
+
             @Override
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
-                Graphics2D g2d = (Graphics2D) g;
+                Graphics2D g2d = (Graphics2D) g.create();
                 g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-                GradientPaint gradient = new GradientPaint(0, 0, new Color(30, 60, 120), 0, getHeight(), new Color(60, 120, 180));
-                g2d.setPaint(gradient);
-                g2d.fillRect(0, 0, getWidth(), getHeight());
+
+                if (backgroundImage != null) {
+                    // Escalar la imagen al tamaño del panel
+                    g2d.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
+                } else {
+                    // Fallback al degradado original si la imagen no se puede cargar
+                    GradientPaint gradient = new GradientPaint(0, 0, new Color(30, 60, 120), 0, getHeight(), new Color(60, 120, 180));
+                    g2d.setPaint(gradient);
+                    g2d.fillRect(0, 0, getWidth(), getHeight());
+                }
+                g2d.dispose();
             }
         };
         fondoPanel.setLayout(new GridBagLayout());
@@ -59,7 +83,7 @@ public class NuevoUsuario extends JFrame {
                 g2d.fillRoundRect(0, 0, getWidth() - 1, getHeight() - 1, 40, 40);
             }
         };
-        formPanel.setBackground(Color.WHITE);
+        formPanel.setBackground(new Color(255, 255, 255, 230)); // Ligeramente transparente para ver la imagen de fondo
         formPanel.setOpaque(false);
         formPanel.setBorder(new EmptyBorder(20, 20, 20, 20));
         formPanel.setLayout(null);
@@ -437,7 +461,7 @@ public class NuevoUsuario extends JFrame {
             String ciText = cajaCI.getText().trim();
             String role = (String) cajarol.getSelectedItem();
 
-            // Validar campos vacíos y placeholders (usando la lógica del CÓDIGO 2)
+            // Validar campos vacíos y placeholders
             if (nombre.isEmpty() || nombre.equals("Ingrese el nombre") ||
                 APP.isEmpty() || APP.equals("Ingrese el apellido paterno") ||
                 APM.isEmpty() || APM.equals("Ingrese el apellido materno") ||
@@ -457,7 +481,7 @@ public class NuevoUsuario extends JFrame {
             ControlUsuario controlUsuario = new ControlUsuario();
             controlUsuario.insertar(nuevoUsuario);
 
-            // Mostrar mensaje de éxito (estilo del CÓDIGO 2)
+            // Mostrar mensaje de éxito
             JOptionPane.showMessageDialog(this, "Usuario guardado exitosamente", "Éxito", JOptionPane.INFORMATION_MESSAGE);
             dispose();
 
