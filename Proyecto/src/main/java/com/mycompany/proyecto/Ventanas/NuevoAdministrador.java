@@ -15,6 +15,9 @@ import javax.swing.border.LineBorder;
 import com.mycompany.proyecto.clases.Administrador;
 import com.mycompany.proyecto.Controles.ControlAdministrador;
 import com.mycompany.proyecto.Exceptions.CredencialesInvalidas;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import javax.imageio.ImageIO;
 
 /**
  *
@@ -36,16 +39,36 @@ public class NuevoAdministrador extends JFrame {
         setMinimumSize(new Dimension(900, 600)); // Tamaño más compacto
         setResizable(true); // Permitimos redimensionar la ventana
 
-        // Fondo con degradado
+        // Fondo con imagen
         JPanel fondoPanel = new JPanel() {
+            private BufferedImage backgroundImage;
+
+            {
+                try {
+                    // Cargar la imagen desde la ruta especificada
+                    backgroundImage = ImageIO.read(new File("C:\\Users\\Usuario\\Documents\\NetBeansProjects\\SistemaControlPrestamoLab\\usb.jpeg"));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    backgroundImage = null; // En caso de error, no usar imagen
+                }
+            }
+
             @Override
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
-                Graphics2D g2d = (Graphics2D) g;
+                Graphics2D g2d = (Graphics2D) g.create();
                 g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-                GradientPaint gradient = new GradientPaint(0, 0, new Color(30, 60, 120), 0, getHeight(), new Color(60, 120, 180));
-                g2d.setPaint(gradient);
-                g2d.fillRect(0, 0, getWidth(), getHeight());
+                
+                if (backgroundImage != null) {
+                    // Escalar la imagen al tamaño del panel
+                    g2d.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
+                } else {
+                    // Fallback al degradado original si la imagen no se puede cargar
+                    GradientPaint gradient = new GradientPaint(0, 0, new Color(30, 60, 120), 0, getHeight(), new Color(60, 120, 180));
+                    g2d.setPaint(gradient);
+                    g2d.fillRect(0, 0, getWidth(), getHeight());
+                }
+                g2d.dispose();
             }
         };
         fondoPanel.setLayout(new GridBagLayout());
@@ -62,13 +85,13 @@ public class NuevoAdministrador extends JFrame {
                 g2d.fillRoundRect(0, 0, getWidth() - 1, getHeight() - 1, 40, 40);
             }
         };
-        formPanel.setBackground(Color.WHITE);
+        formPanel.setBackground(new Color(255, 255, 255, 230)); // Ligeramente transparente para ver la imagen de fondo
         formPanel.setOpaque(false);
         formPanel.setBorder(new EmptyBorder(20, 20, 20, 20));
         formPanel.setLayout(null);
         formPanel.setPreferredSize(new Dimension(600, 520));
 
-        // Añadir el panel al fondoPanel usando GridBagConstraints
+        // Añadir el panel al fondoPanel hugging GridBagConstraints
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 0;
@@ -96,6 +119,7 @@ public class NuevoAdministrador extends JFrame {
         int labelWidth = 120;
         int fieldWidth = 150;
         int fieldHeight = 30;
+
         int yStart = 70;
         int yGap = 40;
 
@@ -325,7 +349,7 @@ public class NuevoAdministrador extends JFrame {
                 botonGuardar.setBackground(new Color(82, 169, 41));
             }
         });
-        // Acción del botón "Guardar" - Implementado según CÓDIGO 2
+        // Acción del botón "Guardar"
         botonGuardar.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
