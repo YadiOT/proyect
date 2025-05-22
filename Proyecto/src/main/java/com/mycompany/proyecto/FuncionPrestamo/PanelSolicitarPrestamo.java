@@ -1,32 +1,62 @@
 /*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ * Click nbsp://netbeans/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbsp://netbeans/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package com.mycompany.proyecto.FuncionPrestamo;
 
-import com.mycompany.proyecto.clases.Laboratorio;
-import com.mycompany.proyecto.clases.Horario;
-import com.mycompany.proyecto.clases.Equipamiento;
-import com.mycompany.proyecto.clases.Insumo;
-import com.mycompany.proyecto.Controles.ControladorLaboratorio;
-import com.mycompany.proyecto.Controles.ControladorHorario;
-import com.mycompany.proyecto.Controles.ControladorPrestamo;
-import com.mycompany.proyecto.Controles.ControladorEquipamento;
-import com.mycompany.proyecto.Controles.ControladorInsumo;
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.BasicStroke;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Cursor;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.RenderingHints;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
-import javax.swing.*;
+
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+import javax.swing.border.Border;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.TitledBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+
+import com.mycompany.proyecto.Controles.ControladorEquipamento;
+import com.mycompany.proyecto.Controles.ControladorHorario;
+import com.mycompany.proyecto.Controles.ControladorInsumo;
+import com.mycompany.proyecto.Controles.ControladorLaboratorio;
+import com.mycompany.proyecto.Controles.ControladorPrestamo;
+import com.mycompany.proyecto.clases.Equipamiento;
+import com.mycompany.proyecto.clases.Horario;
+import com.mycompany.proyecto.clases.Insumo;
+import com.mycompany.proyecto.clases.Laboratorio;
+
 /**
  *
  * @author Usuario
@@ -70,56 +100,69 @@ public class PanelSolicitarPrestamo extends JPanel {
 
     private void initComponents() {
         setLayout(new BorderLayout());
-        setBackground(new Color(240, 242, 245));
+        setBackground(new Color(245, 247, 250));
+        setBorder(new EmptyBorder(15, 15, 15, 15));
 
         // Título
         JLabel titleLabel = new JLabel("Solicitar Préstamo", SwingConstants.CENTER);
-        titleLabel.setFont(new Font("Segoe UI", Font.BOLD, 24));
-        titleLabel.setForeground(new Color(81, 0, 255));
-        titleLabel.setBorder(BorderFactory.createEmptyBorder(20, 0, 20, 0));
+        titleLabel.setFont(new Font("Roboto", Font.BOLD, 22));
+        titleLabel.setForeground(new Color(33, 37, 41));
+        titleLabel.setBorder(BorderFactory.createEmptyBorder(10, 0, 15, 0));
         add(titleLabel, BorderLayout.NORTH);
 
         // Panel principal con secciones
         JPanel formPanel = new JPanel(new GridBagLayout());
-        formPanel.setBackground(new Color(240, 242, 245));
-        formPanel.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
+        formPanel.setBackground(new Color(245, 247, 250));
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(12, 12, 12, 12);
-        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.insets = new Insets(5, 5, 5, 5);
+        gbc.fill = GridBagConstraints.BOTH;
         gbc.weightx = 1.0;
 
         // Sección: Laboratorio y Horario
         JPanel sectionLabHorario = new JPanel(new GridBagLayout());
         sectionLabHorario.setBackground(Color.WHITE);
-        sectionLabHorario.setBorder(BorderFactory.createTitledBorder("Selección de Laboratorio y Horario"));
+        sectionLabHorario.setBorder(createRoundedBorder(new Color(52, 58, 64), 10));
+        sectionLabHorario.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createTitledBorder(
+                        BorderFactory.createLineBorder(new Color(52, 58, 64), 2),
+                        "Laboratorio y Horario",
+                        TitledBorder.LEFT,
+                        TitledBorder.TOP,
+                        new Font("Roboto", Font.BOLD, 14),
+                        new Color(33, 37, 41)),
+                BorderFactory.createEmptyBorder(5, 10, 5, 10)));
         GridBagConstraints gbcSection = new GridBagConstraints();
-        gbcSection.insets = new Insets(10, 10, 10, 10);
+        gbcSection.insets = new Insets(5, 5, 5, 5);
         gbcSection.fill = GridBagConstraints.HORIZONTAL;
 
         // Laboratorio
         gbcSection.gridx = 0;
         gbcSection.gridy = 0;
         JLabel lblLaboratorio = new JLabel("Laboratorio:");
-        lblLaboratorio.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+        lblLaboratorio.setFont(new Font("Roboto", Font.PLAIN, 14));
+        lblLaboratorio.setForeground(new Color(33, 37, 41));
         sectionLabHorario.add(lblLaboratorio, gbcSection);
 
         gbcSection.gridx = 1;
         comboLaboratorios = new JComboBox<>();
-        comboLaboratorios.setFont(new Font("Segoe UI", Font.PLAIN, 16));
-        comboLaboratorios.setPreferredSize(new Dimension(350, 35));
+        comboLaboratorios.setFont(new Font("Roboto", Font.PLAIN, 14));
+        comboLaboratorios.setBackground(Color.WHITE);
+        comboLaboratorios.setPreferredSize(new Dimension(250, 30));
         sectionLabHorario.add(comboLaboratorios, gbcSection);
 
         // Horario
         gbcSection.gridx = 0;
         gbcSection.gridy = 1;
         JLabel lblHorario = new JLabel("Horario:");
-        lblHorario.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+        lblHorario.setFont(new Font("Roboto", Font.PLAIN, 14));
+        lblHorario.setForeground(new Color(33, 37, 41));
         sectionLabHorario.add(lblHorario, gbcSection);
 
         gbcSection.gridx = 1;
         comboHorarios = new JComboBox<>();
-        comboHorarios.setFont(new Font("Segoe UI", Font.PLAIN, 16));
-        comboHorarios.setPreferredSize(new Dimension(350, 35));
+        comboHorarios.setFont(new Font("Roboto", Font.PLAIN, 14));
+        comboHorarios.setBackground(Color.WHITE);
+        comboHorarios.setPreferredSize(new Dimension(250, 30));
         sectionLabHorario.add(comboHorarios, gbcSection);
 
         gbc.gridx = 0;
@@ -127,90 +170,158 @@ public class PanelSolicitarPrestamo extends JPanel {
         gbc.gridwidth = 2;
         formPanel.add(sectionLabHorario, gbc);
 
-        // Sección: Equipamientos
-        modeloEquipamientos = new DefaultTableModel(new String[]{"ID", "Nombre", "Modelo", "Disponibilidad"}, 0);
+        // Panel para dividir equipamientos e insumos
+        JPanel splitPanel = new JPanel(new GridBagLayout());
+        splitPanel.setBackground(new Color(245, 247, 250));
+        GridBagConstraints gbcSplit = new GridBagConstraints();
+        gbcSplit.insets = new Insets(5, 5, 5, 5);
+        gbcSplit.fill = GridBagConstraints.BOTH;
+        gbcSplit.weightx = 0.5;
+
+        // Sección: Equipamientos (izquierda)
+        modeloEquipamientos = new DefaultTableModel(new String[]{"ID", "Nombre", "Modelo", "Disp."}, 0);
         tablaEquipamientos = new JTable(modeloEquipamientos) {
             @Override
             public boolean isCellEditable(int row, int column) {
                 return false;
             }
         };
-        tablaEquipamientos.setRowHeight(30);
-        tablaEquipamientos.setSelectionBackground(new Color(200, 220, 255));
-        tablaEquipamientos.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        tablaEquipamientos.setRowHeight(22);
+        tablaEquipamientos.setFont(new Font("Roboto", Font.PLAIN, 12));
+        tablaEquipamientos.getTableHeader().setFont(new Font("Roboto", Font.BOLD, 13));
         tablaEquipamientos.setShowGrid(true);
-        tablaEquipamientos.setGridColor(new Color(230, 230, 230));
-        tablaEquipamientos.getColumnModel().getColumn(0).setPreferredWidth(50);
-        tablaEquipamientos.getColumnModel().getColumn(1).setPreferredWidth(200);
-        tablaEquipamientos.getColumnModel().getColumn(2).setPreferredWidth(150);
-        tablaEquipamientos.getColumnModel().getColumn(3).setPreferredWidth(100);
+        tablaEquipamientos.setGridColor(new Color(220, 224, 228));
+
+        DefaultTableCellRenderer rendererEquip = new DefaultTableCellRenderer() {
+            @Override
+            public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+                Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+                c.setBackground(row % 2 == 0 ? Color.WHITE : new Color(240, 242, 245));
+                if (isSelected) {
+                    c.setBackground(new Color(200, 230, 255));
+                    c.setForeground(Color.BLACK);
+                } else {
+                    c.setForeground(Color.BLACK);
+                }
+                ((JComponent) c).setOpaque(true);
+                return c;
+            }
+        };
+        for (int i = 0; i < tablaEquipamientos.getColumnCount(); i++) {
+            tablaEquipamientos.getColumnModel().getColumn(i).setCellRenderer(rendererEquip);
+        }
+
+        tablaEquipamientos.getColumnModel().getColumn(0).setPreferredWidth(35);
+        tablaEquipamientos.getColumnModel().getColumn(1).setPreferredWidth(150);
+        tablaEquipamientos.getColumnModel().getColumn(2).setPreferredWidth(100);
+        tablaEquipamientos.getColumnModel().getColumn(3).setPreferredWidth(70);
 
         JScrollPane scrollEquipamientos = new JScrollPane(tablaEquipamientos);
-        scrollEquipamientos.setPreferredSize(new Dimension(700, 250));
+        scrollEquipamientos.setPreferredSize(new Dimension(450, 120));
         scrollEquipamientos.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         scrollEquipamientos.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        scrollEquipamientos.setBorder(createRoundedBorder(new Color(52, 58, 64), 10));
 
-        gbc.gridy = 1;
         JPanel sectionEquipamientos = new JPanel(new BorderLayout());
         sectionEquipamientos.setBackground(Color.WHITE);
-        sectionEquipamientos.setBorder(BorderFactory.createTitledBorder("Equipamientos Disponibles"));
+        sectionEquipamientos.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createTitledBorder(
+                        BorderFactory.createLineBorder(new Color(52, 58, 64), 2),
+                        "Equipamientos",
+                        TitledBorder.LEFT,
+                        TitledBorder.TOP,
+                        new Font("Roboto", Font.BOLD, 14),
+                        new Color(33, 37, 41)),
+                BorderFactory.createEmptyBorder(5, 5, 5, 5)));
         sectionEquipamientos.add(scrollEquipamientos, BorderLayout.CENTER);
 
-        btnAgregarEquipamiento = new JButton("Agregar Equipamiento");
-        btnAgregarEquipamiento.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-        btnAgregarEquipamiento.setBackground(new Color(25, 209, 49));
+        btnAgregarEquipamiento = new JButton("Agregar");
+        btnAgregarEquipamiento.setFont(new Font("Roboto", Font.BOLD, 12));
+        btnAgregarEquipamiento.setBackground(new Color(52, 168, 83));
         btnAgregarEquipamiento.setForeground(Color.WHITE);
-        btnAgregarEquipamiento.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
+        btnAgregarEquipamiento.setPreferredSize(new Dimension(120, 30));
         btnAgregarEquipamiento.setFocusPainted(false);
         btnAgregarEquipamiento.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        btnAgregarEquipamiento.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                btnAgregarEquipamiento.setBackground(new Color(50, 230, 70));
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                btnAgregarEquipamiento.setBackground(new Color(25, 209, 49));
-            }
-        });
+        btnAgregarEquipamiento.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(new Color(52, 58, 64), 2, true),
+                BorderFactory.createEmptyBorder(5, 10, 5, 10)));
+        addHoverEffect(btnAgregarEquipamiento);
 
-        sectionEquipamientos.add(btnAgregarEquipamiento, BorderLayout.SOUTH);
-        formPanel.add(sectionEquipamientos, gbc);
+        JPanel btnPanelEquip = new JPanel(new FlowLayout(FlowLayout.CENTER, 5, 5));
+        btnPanelEquip.setBackground(Color.WHITE);
+        btnPanelEquip.add(btnAgregarEquipamiento);
+        sectionEquipamientos.add(btnPanelEquip, BorderLayout.SOUTH);
 
-        // Sección: Insumos
-        modeloInsumos = new DefaultTableModel(new String[]{"ID", "Insumo", "Cantidad Disponible", "Categoría"}, 0);
+        gbcSplit.gridx = 0;
+        gbcSplit.gridy = 0;
+        splitPanel.add(sectionEquipamientos, gbcSplit);
+
+        // Sección: Insumos (derecha)
+        modeloInsumos = new DefaultTableModel(new String[]{"ID", "Insumo", "Cant.", "Cat."}, 0);
         tablaInsumos = new JTable(modeloInsumos) {
             @Override
             public boolean isCellEditable(int row, int column) {
                 return false;
             }
         };
-        tablaInsumos.setRowHeight(30);
-        tablaInsumos.setSelectionBackground(new Color(200, 220, 255));
-        tablaInsumos.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        tablaInsumos.setRowHeight(22);
+        tablaInsumos.setFont(new Font("Roboto", Font.PLAIN, 12));
+        tablaInsumos.getTableHeader().setFont(new Font("Roboto", Font.BOLD, 13));
         tablaInsumos.setShowGrid(true);
-        tablaInsumos.setGridColor(new Color(230, 230, 230));
-        tablaInsumos.getColumnModel().getColumn(0).setPreferredWidth(50);
-        tablaInsumos.getColumnModel().getColumn(1).setPreferredWidth(200);
-        tablaInsumos.getColumnModel().getColumn(2).setPreferredWidth(100);
-        tablaInsumos.getColumnModel().getColumn(3).setPreferredWidth(100);
+        tablaInsumos.setGridColor(new Color(220, 224, 228));
+
+        DefaultTableCellRenderer rendererInsumo = new DefaultTableCellRenderer() {
+            @Override
+            public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+                Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+                c.setBackground(row % 2 == 0 ? Color.WHITE : new Color(240, 242, 245));
+                if (isSelected) {
+                    c.setBackground(new Color(200, 230, 255));
+                    c.setForeground(Color.BLACK);
+                } else {
+                    c.setForeground(Color.BLACK);
+                }
+                ((JComponent) c).setOpaque(true);
+                return c;
+            }
+        };
+        for (int i = 0; i < tablaInsumos.getColumnCount(); i++) {
+            tablaInsumos.getColumnModel().getColumn(i).setCellRenderer(rendererInsumo);
+        }
+
+        tablaInsumos.getColumnModel().getColumn(0).setPreferredWidth(35);
+        tablaInsumos.getColumnModel().getColumn(1).setPreferredWidth(150);
+        tablaInsumos.getColumnModel().getColumn(2).setPreferredWidth(70);
+        tablaInsumos.getColumnModel().getColumn(3).setPreferredWidth(70);
 
         JScrollPane scrollInsumos = new JScrollPane(tablaInsumos);
-        scrollInsumos.setPreferredSize(new Dimension(700, 250));
+        scrollInsumos.setPreferredSize(new Dimension(450, 120));
         scrollInsumos.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         scrollInsumos.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        scrollInsumos.setBorder(createRoundedBorder(new Color(52, 58, 64), 10));
 
-        gbc.gridy = 2;
         JPanel sectionInsumos = new JPanel(new BorderLayout());
         sectionInsumos.setBackground(Color.WHITE);
-        sectionInsumos.setBorder(BorderFactory.createTitledBorder("Insumos Disponibles"));
+        sectionInsumos.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createTitledBorder(
+                        BorderFactory.createLineBorder(new Color(52, 58, 64), 2),
+                        "Insumos",
+                        TitledBorder.LEFT,
+                        TitledBorder.TOP,
+                        new Font("Roboto", Font.BOLD, 14),
+                        new Color(33, 37, 41)),
+                BorderFactory.createEmptyBorder(5, 5, 5, 5)));
         sectionInsumos.add(scrollInsumos, BorderLayout.CENTER);
 
-        JPanel insumoPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        JPanel insumoPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 5, 2));
         insumoPanel.setBackground(Color.WHITE);
-        JLabel lblCantidad = new JLabel("Cantidad:");
-        lblCantidad.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+        JLabel lblCantidad = new JLabel("Cant.:");
+        lblCantidad.setFont(new Font("Roboto", Font.PLAIN, 12));
+        lblCantidad.setForeground(new Color(33, 37, 41));
         insumoPanel.add(lblCantidad);
-        txtCantidadInsumo = new JTextField(6);
-        txtCantidadInsumo.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+        txtCantidadInsumo = new JTextField(4);
+        txtCantidadInsumo.setFont(new Font("Roboto", Font.PLAIN, 12));
+        txtCantidadInsumo.setPreferredSize(new Dimension(60, 25));
         txtCantidadInsumo.getDocument().addDocumentListener(new DocumentListener() {
             public void insertUpdate(DocumentEvent e) { validarCantidad(); }
             public void removeUpdate(DocumentEvent e) { validarCantidad(); }
@@ -222,7 +333,7 @@ public class PanelSolicitarPrestamo extends JPanel {
                     if (cantidad <= 0) {
                         txtCantidadInsumo.setBorder(BorderFactory.createLineBorder(Color.RED));
                     } else {
-                        txtCantidadInsumo.setBorder(BorderFactory.createLineBorder(Color.GRAY));
+                        txtCantidadInsumo.setBorder(BorderFactory.createLineBorder(new Color(52, 58, 64)));
                     }
                 } catch (NumberFormatException ex) {
                     txtCantidadInsumo.setBorder(BorderFactory.createLineBorder(Color.RED));
@@ -230,57 +341,71 @@ public class PanelSolicitarPrestamo extends JPanel {
             }
         });
         insumoPanel.add(txtCantidadInsumo);
-        btnAgregarInsumo = new JButton("Agregar Insumo");
-        btnAgregarInsumo.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-        btnAgregarInsumo.setBackground(new Color(25, 209, 49));
+        btnAgregarInsumo = new JButton("Agregar");
+        btnAgregarInsumo.setFont(new Font("Roboto", Font.BOLD, 12));
+        btnAgregarInsumo.setBackground(new Color(52, 168, 83));
         btnAgregarInsumo.setForeground(Color.WHITE);
-        btnAgregarInsumo.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
+        btnAgregarInsumo.setPreferredSize(new Dimension(120, 30));
         btnAgregarInsumo.setFocusPainted(false);
         btnAgregarInsumo.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        btnAgregarInsumo.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                btnAgregarInsumo.setBackground(new Color(50, 230, 70));
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                btnAgregarInsumo.setBackground(new Color(25, 209, 49));
-            }
-        });
+        btnAgregarInsumo.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(new Color(52, 58, 64), 2, true),
+                BorderFactory.createEmptyBorder(5, 10, 5, 10)));
+        addHoverEffect(btnAgregarInsumo);
         insumoPanel.add(btnAgregarInsumo);
 
         sectionInsumos.add(insumoPanel, BorderLayout.SOUTH);
-        formPanel.add(sectionInsumos, gbc);
+
+        gbcSplit.gridx = 1;
+        gbcSplit.gridy = 0;
+        splitPanel.add(sectionInsumos, gbcSplit);
+
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        gbc.gridwidth = 2;
+        formPanel.add(splitPanel, gbc);
 
         // Sección: Observaciones
-        gbc.gridy = 3;
+        gbc.gridy = 2;
+        gbc.gridwidth = 2;
         JPanel sectionObservaciones = new JPanel(new BorderLayout());
         sectionObservaciones.setBackground(Color.WHITE);
-        sectionObservaciones.setBorder(BorderFactory.createTitledBorder("Observaciones"));
-        txtObservaciones = new JTextArea(5, 20);
-        txtObservaciones.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+        sectionObservaciones.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createTitledBorder(
+                        BorderFactory.createLineBorder(new Color(52, 58, 64), 2),
+                        "Observaciones",
+                        TitledBorder.LEFT,
+                        TitledBorder.TOP,
+                        new Font("Roboto", Font.BOLD, 14),
+                        new Color(33, 37, 41)),
+                BorderFactory.createEmptyBorder(5, 10, 5, 10)));
+        txtObservaciones = new JTextArea(4, 20);
+        txtObservaciones.setFont(new Font("Roboto", Font.PLAIN, 14));
         txtObservaciones.setLineWrap(true);
         txtObservaciones.setWrapStyleWord(true);
+        txtObservaciones.setBorder(BorderFactory.createCompoundBorder(
+                createRoundedBorder(new Color(52, 58, 64), 10),
+                BorderFactory.createEmptyBorder(5, 5, 5, 5)));
         JScrollPane scrollObservaciones = new JScrollPane(txtObservaciones);
+        scrollObservaciones.setBorder(null);
         sectionObservaciones.add(scrollObservaciones, BorderLayout.CENTER);
         formPanel.add(sectionObservaciones, gbc);
 
         // Botón Solicitar
         btnSolicitar = new JButton("Solicitar Préstamo");
-        btnSolicitar.setFont(new Font("Segoe UI", Font.BOLD, 16));
-        btnSolicitar.setBackground(new Color(81, 0, 255));
+        btnSolicitar.setFont(new Font("Roboto", Font.BOLD, 14));
+        btnSolicitar.setBackground(new Color(0, 123, 255));
         btnSolicitar.setForeground(Color.WHITE);
-        btnSolicitar.setBorder(BorderFactory.createEmptyBorder(12, 30, 12, 30));
+        btnSolicitar.setPreferredSize(new Dimension(200, 40));
         btnSolicitar.setFocusPainted(false);
         btnSolicitar.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        btnSolicitar.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                btnSolicitar.setBackground(new Color(100, 20, 255));
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                btnSolicitar.setBackground(new Color(81, 0, 255));
-            }
-        });
+        btnSolicitar.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(new Color(52, 58, 64), 2, true),
+                BorderFactory.createEmptyBorder(5, 10, 5, 10)));
+        addHoverEffect(btnSolicitar);
 
-        gbc.gridy = 4;
+        gbc.gridy = 3;
+        gbc.anchor = GridBagConstraints.CENTER;
         formPanel.add(btnSolicitar, gbc);
 
         // Envolver el formPanel en un JScrollPane para pantallas pequeñas
@@ -334,6 +459,48 @@ public class PanelSolicitarPrestamo extends JPanel {
             } catch (Exception ex) {
                 LOGGER.severe("Error al solicitar préstamo: " + ex.getMessage());
                 JOptionPane.showMessageDialog(this, "Error al solicitar préstamo: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        });
+    }
+
+    // Crea un borde redondeado personalizado
+    private Border createRoundedBorder(Color color, int radius) {
+        return new Border() {
+            @Override
+            public void paintBorder(Component c, Graphics g, int x, int y, int width, int height) {
+                Graphics2D g2 = (Graphics2D) g.create();
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                g2.setColor(color);
+                g2.setStroke(new BasicStroke(2));
+                g2.drawRoundRect(x, y, width - 1, height - 1, radius, radius);
+                g2.dispose();
+            }
+
+            @Override
+            public Insets getBorderInsets(Component c) {
+                return new Insets(radius + 1, radius + 1, radius + 1, radius + 1);
+            }
+
+            @Override
+            public boolean isBorderOpaque() {
+                return true;
+            }
+        };
+    }
+
+    // Agrega efecto hover a los botones
+    private void addHoverEffect(JButton button) {
+        Color originalColor = button.getBackground();
+        Color hoverColor = originalColor.brighter();
+        button.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                button.setBackground(hoverColor);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                button.setBackground(originalColor);
             }
         });
     }
