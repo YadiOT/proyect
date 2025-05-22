@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.mycompany.proyecto.Ventanas;
 
 import javax.swing.*;
@@ -27,26 +23,27 @@ import com.mycompany.proyecto.PanelesDeMateriales.PanelInsumos;
 import com.mycompany.proyecto.PanelesDeMateriales.PanelHerramientas;
 import com.mycompany.proyecto.PanelesDeMateriales.PanelEditarInsumos;
 import com.mycompany.proyecto.PanelSanciones.PanelSancionesVigentes;
+
 /**
- *
+ * Ventana principal para docentes en el Sistema de Control y Préstamo de Laboratorios
  * @author Usuario
  */
 public class Principal2 extends JFrame {
 
     private JPanel contentPanel;
     private JLabel usuarioLabel;
-    private int ruUsuario; // Añadido para almacenar el RU del usuario
-    private static final Color PRIMARY_COLOR = new Color(33, 97, 140);
-    private static final Color SECONDARY_COLOR = new Color(235, 245, 255);
-    private static final Color ACCENT_COLOR = new Color(52, 152, 219);
-    private static final Color TEXT_COLOR = Color.WHITE;
-    private static final Color SHADOW_COLOR = new Color(0, 0, 0, 80);
-    private static final Font HEADER_FONT = new Font("Segoe UI", Font.BOLD, 20);
-    private static final Font BUTTON_FONT = new Font("Segoe UI", Font.BOLD, 14);
-    private static final Font LABEL_FONT = new Font("Segoe UI", Font.PLAIN, 14);
+    private int ruUsuario;
+    private static final Color PRIMARY_COLOR = new Color(0, 95, 95); // Dark teal for header and buttons
+    private static final Color SECONDARY_COLOR = new Color(230, 247, 250); // Light cyan background
+    private static final Color ACCENT_COLOR = new Color(255, 140, 102); // Slightly darker coral for hover
+    private static final Color TEXT_COLOR = new Color(255, 255, 255); // White for text on buttons and header
+    private static final Color SHADOW_COLOR = new Color(0, 0, 0, 51); // Subtle gray shadow (20% opacity)
+    private static final Font HEADER_FONT = new Font("Roboto", Font.BOLD, 24);
+    private static final Font BUTTON_FONT = new Font("Roboto", Font.BOLD, 16);
+    private static final Font LABEL_FONT = new Font("Roboto", Font.PLAIN, 15);
 
     public Principal2(int ruUsuario) {
-        this.ruUsuario = ruUsuario; // Inicializar ruUsuario
+        this.ruUsuario = ruUsuario;
         setTitle("Sistema de Control y Préstamo de Laboratorios - Docentes");
         setSize(1200, 700);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -73,8 +70,7 @@ public class Principal2 extends JFrame {
                 super.paintComponent(g);
                 Graphics2D g2d = (Graphics2D) g.create();
                 g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-                GradientPaint gradient = new GradientPaint(0, 0, SECONDARY_COLOR, 0, getHeight(), new Color(180, 220, 255));
-                g2d.setPaint(gradient);
+                g2d.setColor(SECONDARY_COLOR);
                 g2d.fillRect(0, 0, getWidth(), getHeight());
                 g2d.dispose();
             }
@@ -86,39 +82,49 @@ public class Principal2 extends JFrame {
     private JPanel createHeaderPanel() {
         JPanel headerPanel = new JPanel(new BorderLayout());
         headerPanel.setBackground(PRIMARY_COLOR);
-        headerPanel.setPreferredSize(new Dimension(getWidth(), 60));
+        headerPanel.setPreferredSize(new Dimension(getWidth(), 70));
         headerPanel.setBorder(new EmptyBorder(0, 20, 0, 20));
 
         JLabel titleLabel = new JLabel("Universidad Salesiana de Bolivia");
-        titleLabel.setForeground(Color.WHITE);
+        titleLabel.setForeground(TEXT_COLOR);
         titleLabel.setFont(HEADER_FONT);
+        titleLabel.setBorder(new EmptyBorder(0, 10, 0, 0));
         headerPanel.add(titleLabel, BorderLayout.WEST);
 
-        JPanel userPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 15, 15));
+        JPanel userPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 20, 15));
         userPanel.setOpaque(false);
 
-        usuarioLabel = new JLabel("Docente ▼");
-        usuarioLabel.setForeground(Color.WHITE);
+        usuarioLabel = new JLabel("Docente");
+        usuarioLabel.setForeground(TEXT_COLOR);
         usuarioLabel.setFont(BUTTON_FONT);
         usuarioLabel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         userPanel.add(usuarioLabel);
 
-        JButton logoutButton = new JButton("Cerrar Sesión");
-        logoutButton.setBackground(new Color(231, 76, 60));
-        logoutButton.setForeground(Color.WHITE);
+        JButton logoutButton = new JButton("Cerrar Sesión") {
+            @Override
+            protected void paintComponent(Graphics g) {
+                Graphics2D g2d = (Graphics2D) g;
+                g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                g2d.setColor(getBackground());
+                g2d.fillRoundRect(0, 0, getWidth(), getHeight(), 15, 15);
+                super.paintComponent(g);
+            }
+        };
+        logoutButton.setBackground(new Color(255, 77, 77)); // Red logout button
+        logoutButton.setForeground(TEXT_COLOR);
         logoutButton.setFont(BUTTON_FONT);
         logoutButton.setFocusPainted(false);
-        logoutButton.setBorder(new RoundedBorder(12));
+        logoutButton.setBorderPainted(false);
         logoutButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         logoutButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {
-                logoutButton.setBackground(new Color(250, 100, 80));
+                logoutButton.setBackground(ACCENT_COLOR);
             }
 
             @Override
             public void mouseExited(MouseEvent e) {
-                logoutButton.setBackground(new Color(231, 76, 60));
+                logoutButton.setBackground(new Color(255, 77, 77));
             }
         });
         logoutButton.addActionListener(e -> dispose());
@@ -131,18 +137,20 @@ public class Principal2 extends JFrame {
     private JPanel createMenuPanel() {
         JPanel panel = new JPanel(new BorderLayout());
         panel.setOpaque(false);
-        panel.setBorder(new EmptyBorder(20, 20, 20, 20));
+        panel.setBorder(new EmptyBorder(40, 20, 40, 20));
 
-        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 15, 10));
+        JPanel buttonPanel = new JPanel(new GridLayout(6, 1, 0, 15));
         buttonPanel.setOpaque(false);
+        buttonPanel.setPreferredSize(new Dimension(260, getHeight()));
+        buttonPanel.setBorder(new EmptyBorder(0, 10, 0, 10));
 
         contentPanel = new JPanel(new BorderLayout());
-        contentPanel.setBackground(Color.WHITE);
-        contentPanel.setBorder(new RoundedBorder(10));
+        contentPanel.setBackground(new Color(255, 255, 255, 221)); // White with 87% opacity
+        contentPanel.setBorder(new RoundedBorder(20));
 
         JLabel welcomeLabel = new JLabel("Bienvenido al Sistema de Control y Préstamo de Laboratorios", SwingConstants.CENTER);
-        welcomeLabel.setFont(new Font("Segoe UI", Font.PLAIN, 18));
-        welcomeLabel.setForeground(new Color(44, 62, 80));
+        welcomeLabel.setFont(new Font("Roboto", Font.PLAIN, 18));
+        welcomeLabel.setForeground(new Color(38, 50, 56));
         contentPanel.add(welcomeLabel, BorderLayout.CENTER);
 
         buttonPanel.add(createMenuButton("Laboratorios", new String[]{"Horarios"}));
@@ -152,101 +160,105 @@ public class Principal2 extends JFrame {
         buttonPanel.add(createMenuButton("Materiales", new String[]{"Insumos", "Herramientas", "Editar Insumos"}));
         buttonPanel.add(createMenuButton("Sanciones", new String[]{"Sanciones Vigentes"}));
 
-        panel.add(buttonPanel, BorderLayout.NORTH);
+        panel.add(buttonPanel, BorderLayout.WEST);
         panel.add(contentPanel, BorderLayout.CENTER);
         return panel;
     }
 
     private JButton createMenuButton(String title, String[] subOptions) {
-        JButton button = new JButton(title) {
-            @Override
-            protected void paintComponent(Graphics g) {
-                super.paintComponent(g);
-                Graphics2D g2d = (Graphics2D) g.create();
-                g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-                g2d.setColor(SHADOW_COLOR);
-                g2d.fillRoundRect(3, 3, getWidth() - 4, getHeight() - 4, 20, 20);
-                GradientPaint gradient = new GradientPaint(0, 0, ACCENT_COLOR, 0, getHeight(), new Color(41, 128, 185));
-                g2d.setPaint(gradient);
-                g2d.fillRoundRect(0, 0, getWidth() - 1, getHeight() - 1, 20, 20);
-                g2d.dispose();
+    JButton button = new JButton(title) {
+        @Override
+        protected void paintComponent(Graphics g) {
+            super.paintComponent(g);
+            Graphics2D g2d = (Graphics2D) g.create();
+            g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+            g2d.setColor(SHADOW_COLOR);
+            g2d.fillRoundRect(3, 3, getWidth() - 4, getHeight() - 4, 20, 20);
+            g2d.setColor(new Color(255, 87, 51)); // Reddish-orange for buttons
+            g2d.fillRoundRect(0, 0, getWidth() - 1, getHeight() - 1, 20, 20);
+            g2d.dispose();
 
-                g2d = (Graphics2D) g.create();
-                g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-                g2d.setColor(TEXT_COLOR);
-                g2d.setFont(getFont());
-                FontMetrics fm = g2d.getFontMetrics();
-                int textWidth = fm.stringWidth(getText());
-                int textHeight = fm.getAscent();
-                int x = (getWidth() - textWidth) / 2;
-                int y = (getHeight() + textHeight) / 2 - 2;
-                g2d.drawString(getText(), x, y);
-                g2d.dispose();
-            }
+            g2d = (Graphics2D) g.create();
+            g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+            g2d.setColor(TEXT_COLOR);
+            g2d.setFont(getFont());
+            FontMetrics fm = g2d.getFontMetrics();
+            int textWidth = fm.stringWidth(getText());
+            int textHeight = fm.getAscent();
+            int x = (getWidth() - textWidth) / 2;
+            int y = (getHeight() + textHeight) / 2 - 2;
+            g2d.drawString(getText(), x, y);
+            g2d.dispose();
+        }
 
-            @Override
-            protected void paintBorder(Graphics g) {
-            }
-        };
-        button.setForeground(TEXT_COLOR);
-        button.setFont(BUTTON_FONT);
-        button.setContentAreaFilled(false);
-        button.setFocusPainted(false);
-        button.setBorder(new RoundedBorder(20));
-        button.setPreferredSize(new Dimension(200, 45));
-        button.addMouseListener(new MouseAdapter() {
+        @Override
+        protected void paintBorder(Graphics g) {
+        }
+    };
+    button.setForeground(TEXT_COLOR);
+    button.setFont(BUTTON_FONT);
+    button.setContentAreaFilled(false);
+    button.setFocusPainted(false);
+    button.setBorder(new RoundedBorder(20));
+    button.setPreferredSize(new Dimension(220, 50));
+    button.addMouseListener(new MouseAdapter() {
+        @Override
+        public void mouseEntered(MouseEvent e) {
+            button.setBackground(ACCENT_COLOR);
+            button.repaint();
+        }
+
+        @Override
+        public void mouseExited(MouseEvent e) {
+            button.setBackground(new Color(255, 87, 51));
+            button.repaint();
+        }
+    });
+
+    JPopupMenu popupMenu = new JPopupMenu();
+    popupMenu.setBackground(SECONDARY_COLOR);
+    popupMenu.setBorder(new RoundedBorder(10));
+
+    for (String subOption : subOptions) {
+        JMenuItem menuItem = new JMenuItem(subOption);
+        menuItem.setFont(LABEL_FONT);
+        menuItem.setBackground(SECONDARY_COLOR);
+        menuItem.setForeground(new Color(38, 50, 56));
+        menuItem.setBorder(new EmptyBorder(12, 20, 12, 20));
+        menuItem.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {
-                button.setBackground(new Color(52, 170, 220));
-                button.repaint();
+                menuItem.setBackground(new Color(200, 230, 255));
             }
 
             @Override
             public void mouseExited(MouseEvent e) {
-                button.setBackground(ACCENT_COLOR);
-                button.repaint();
+                menuItem.setBackground(SECONDARY_COLOR);
             }
         });
-
-        JPopupMenu popupMenu = new JPopupMenu();
-        popupMenu.setBackground(SECONDARY_COLOR);
-        popupMenu.setBorder(new RoundedBorder(10));
-
-        for (String subOption : subOptions) {
-            JMenuItem menuItem = new JMenuItem(subOption);
-            menuItem.setFont(LABEL_FONT);
-            menuItem.setBackground(SECONDARY_COLOR);
-            menuItem.setForeground(new Color(44, 62, 80));
-            menuItem.setBorder(new EmptyBorder(8, 15, 8, 15));
-            menuItem.addMouseListener(new MouseAdapter() {
-                @Override
-                public void mouseEntered(MouseEvent e) {
-                    menuItem.setBackground(new Color(200, 230, 255));
-                }
-
-                @Override
-                public void mouseExited(MouseEvent e) {
-                    menuItem.setBackground(SECONDARY_COLOR);
-                }
-            });
-            menuItem.addActionListener(e -> mostrarContenido(title, subOption));
-            popupMenu.add(menuItem);
-        }
-
-        button.addActionListener(e -> popupMenu.show(button, 0, button.getHeight()));
-        return button;
+        menuItem.addActionListener(e -> mostrarContenido(title, subOption));
+        popupMenu.add(menuItem);
     }
+
+    // Modified ActionListener to show popup menu to the right of the button
+    button.addActionListener(e -> {
+        // Show the popup menu to the right of the button
+        popupMenu.show(button, button.getWidth(), 0); // Changed x-coordinate to button.getWidth()
+    });
+
+    return button;
+}
 
     private void mostrarContenido(String categoria, String subOpcion) {
         contentPanel.removeAll();
 
         JPanel contentWrapper = new JPanel(new BorderLayout());
         contentWrapper.setOpaque(false);
-        contentWrapper.setBorder(new EmptyBorder(15, 15, 15, 15));
+        contentWrapper.setBorder(new EmptyBorder(20, 20, 20, 20));
 
         JLabel titleLabel = new JLabel(categoria.toUpperCase() + " > " + subOpcion);
-        titleLabel.setFont(new Font("Segoe UI", Font.BOLD, 16));
-        titleLabel.setForeground(new Color(44, 62, 80));
+        titleLabel.setFont(new Font("Roboto", Font.BOLD, 18));
+        titleLabel.setForeground(new Color(38, 50, 56));
         titleLabel.setBorder(new EmptyBorder(10, 10, 10, 10));
         contentWrapper.add(titleLabel, BorderLayout.NORTH);
 
