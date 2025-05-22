@@ -1,19 +1,46 @@
 /*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ * Click nbsp://netbeans/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbsp://netbeans/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package com.mycompany.proyecto.TodosPaneles;
 
-import com.mycompany.proyecto.clases.Horario;
-import com.mycompany.proyecto.clases.Laboratorio;
+import java.awt.BasicStroke;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Cursor;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.GridLayout;
+import java.awt.Insets;
+import java.awt.RenderingHints;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.SwingConstants;
+import javax.swing.border.Border;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.TitledBorder;
+
 import com.mycompany.proyecto.Controles.ControladorHorario;
 import com.mycompany.proyecto.Controles.ControladorLaboratorio;
-import javax.swing.*;
-import java.awt.*;
-import java.sql.SQLException;
-import java.util.List;
-import java.util.HashMap;
-import java.util.Map;
+import com.mycompany.proyecto.clases.Horario;
+import com.mycompany.proyecto.clases.Laboratorio;
 
 /**
  *
@@ -41,27 +68,57 @@ public class PanelVisualizarHorario extends JPanel {
     
     // Arreglos para días y horas
     private final String[] dias = {"Lunes", "Martes", "Miércoles", "Jueves", "Viernes"};
-    private final String[] horas = {"7:30 A 9:00", "9:15 A 10:45", "11:00 A 12:30", "12:30 A 13:30"};
+    private final String[] horas = {"7:30-9:00", "9:15-10:45", "11:00-12:30", "12:30-13:30"};
     
     public PanelVisualizarHorario() {
         controladorHorario = new ControladorHorario();
         controladorLaboratorio = new ControladorLaboratorio();
         
         setLayout(new BorderLayout());
+        setBackground(new Color(245, 247, 250));
+        setBorder(new EmptyBorder(15, 15, 15, 15));
+
+        // Título
+        JLabel titleLabel = new JLabel("Visualizar Horario", SwingConstants.CENTER);
+        titleLabel.setFont(new Font("Roboto", Font.BOLD, 22));
+        titleLabel.setForeground(new Color(33, 37, 41));
+        titleLabel.setBorder(BorderFactory.createEmptyBorder(10, 0, 15, 0));
+        add(titleLabel, BorderLayout.NORTH);
         
         // Panel superior para la selección de laboratorio
-        JPanel panelSeleccion = new JPanel();
-        panelSeleccion.setBackground(new Color(81, 0, 255));
-        JLabel lblLaboratorio = new JLabel("Seleccione Laboratorio:");
-        lblLaboratorio.setForeground(Color.WHITE);
+        JPanel panelSeleccion = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 5));
+        panelSeleccion.setBackground(Color.WHITE);
+        panelSeleccion.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createTitledBorder(
+                        BorderFactory.createLineBorder(new Color(52, 58, 64), 2),
+                        "Selección de Laboratorio",
+                        TitledBorder.LEFT,
+                        TitledBorder.TOP,
+                        new Font("Roboto", Font.BOLD, 14),
+                        new Color(33, 37, 41)),
+                BorderFactory.createEmptyBorder(5, 10, 5, 10)));
+
+        JLabel lblLaboratorio = new JLabel("Laboratorio:");
+        lblLaboratorio.setFont(new Font("Roboto", Font.PLAIN, 14));
+        lblLaboratorio.setForeground(new Color(33, 37, 41));
         
-        // ComboBox para laboratorios
         comboLaboratorio = new JComboBox<>();
+        comboLaboratorio.setFont(new Font("Roboto", Font.PLAIN, 14));
+        comboLaboratorio.setBackground(Color.WHITE);
+        comboLaboratorio.setPreferredSize(new Dimension(250, 30));
         cargarLaboratorios();
         
         JButton btnVer = new JButton("Ver Horario");
-        btnVer.setBackground(new Color(0, 63, 135));
+        btnVer.setFont(new Font("Roboto", Font.BOLD, 14));
+        btnVer.setBackground(new Color(0, 123, 255));
         btnVer.setForeground(Color.WHITE);
+        btnVer.setPreferredSize(new Dimension(150, 35));
+        btnVer.setFocusPainted(false);
+        btnVer.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        btnVer.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(new Color(52, 58, 64), 2, true),
+                BorderFactory.createEmptyBorder(5, 10, 5, 10)));
+        addHoverEffect(btnVer);
         
         panelSeleccion.add(lblLaboratorio);
         panelSeleccion.add(comboLaboratorio);
@@ -69,7 +126,16 @@ public class PanelVisualizarHorario extends JPanel {
         
         // Panel para el horario
         panelHorario = new JPanel(new BorderLayout());
-        panelHorario.setBorder(BorderFactory.createTitledBorder("Horario del Laboratorio"));
+        panelHorario.setBackground(Color.WHITE);
+        panelHorario.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createTitledBorder(
+                        BorderFactory.createLineBorder(new Color(52, 58, 64), 2),
+                        "Horario del Laboratorio",
+                        TitledBorder.LEFT,
+                        TitledBorder.TOP,
+                        new Font("Roboto", Font.BOLD, 14),
+                        new Color(33, 37, 41)),
+                BorderFactory.createEmptyBorder(5, 10, 5, 10)));
         
         // Agregar panels al panel principal
         add(panelSeleccion, BorderLayout.NORTH);
@@ -89,13 +155,12 @@ public class PanelVisualizarHorario extends JPanel {
     
     private void cargarLaboratorios() {
         try {
-            // Usar el controlador de laboratorio para obtener la lista
             List<Laboratorio> laboratorios = controladorLaboratorio.listar();
+            comboLaboratorio.removeAllItems();
             for (Laboratorio lab : laboratorios) {
                 comboLaboratorio.addItem(lab.getIdLaboratorio() + " - " + lab.getUbicacion());
             }
             
-            // Si no hay laboratorios, mostrar mensaje
             if (laboratorios.isEmpty()) {
                 JOptionPane.showMessageDialog(this, 
                     "No hay laboratorios registrados en la base de datos", 
@@ -111,33 +176,40 @@ public class PanelVisualizarHorario extends JPanel {
     }
     
     private void mostrarHorario(int idLaboratorio) {
-        // Limpiar el panel de horario
         panelHorario.removeAll();
         
         // Panel para los días (encabezados)
         JPanel panelDias = new JPanel(new GridLayout(1, 5));
+        panelDias.setBackground(Color.WHITE);
         for (String dia : dias) {
             JLabel label = new JLabel(dia, SwingConstants.CENTER);
-            label.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-            label.setFont(new Font("Arial", Font.BOLD, 14));
-            label.setBackground(new Color(220, 220, 220));
+            label.setFont(new Font("Roboto", Font.BOLD, 13));
+            label.setForeground(new Color(33, 37, 41));
+            label.setBorder(BorderFactory.createLineBorder(new Color(52, 58, 64)));
+            label.setBackground(new Color(240, 242, 245));
             label.setOpaque(true);
             panelDias.add(label);
         }
         
         // Panel para las horas (primera columna)
         JPanel panelHoras = new JPanel(new GridLayout(4, 1));
+        panelHoras.setBackground(Color.WHITE);
         for (String hora : horas) {
             JLabel label = new JLabel(hora, SwingConstants.RIGHT);
-            label.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-            label.setFont(new Font("Arial", Font.BOLD, 12));
-            label.setBackground(new Color(220, 220, 220));
+            label.setFont(new Font("Roboto", Font.BOLD, 12));
+            label.setForeground(new Color(33, 37, 41));
+            label.setBorder(BorderFactory.createLineBorder(new Color(52, 58, 64)));
+            label.setBackground(new Color(240, 242, 245));
             label.setOpaque(true);
+            label.setBorder(BorderFactory.createCompoundBorder(
+                    label.getBorder(),
+                    BorderFactory.createEmptyBorder(0, 5, 0, 5)));
             panelHoras.add(label);
         }
         
         // Panel de la cuadrícula principal
         JPanel gridPanel = new JPanel(new GridLayout(4, 5));
+        gridPanel.setBackground(Color.WHITE);
         celdas = new JPanel[4][5];
         
         // Inicializar todas las celdas como disponibles
@@ -149,11 +221,9 @@ public class PanelVisualizarHorario extends JPanel {
         }
         
         try {
-            // Obtener los horarios del laboratorio seleccionado
             List<Horario> horarios = controladorHorario.listar();
             Map<String, Map<String, Horario>> horariosPorDiaYHora = new HashMap<>();
             
-            // Filtrar horarios por id de laboratorio y organizarlos por día y hora
             for (Horario h : horarios) {
                 if (h.getIdLaboratorio() == idLaboratorio) {
                     if (!horariosPorDiaYHora.containsKey(h.getDia())) {
@@ -163,17 +233,14 @@ public class PanelVisualizarHorario extends JPanel {
                 }
             }
             
-            // Actualizar celdas con la información de los horarios
             for (int hora = 0; hora < horas.length; hora++) {
                 for (int dia = 0; dia < dias.length; dia++) {
-                    // Verificar si hay un horario para este día y hora
                     if (horariosPorDiaYHora.containsKey(dias[dia]) && 
                         horariosPorDiaYHora.get(dias[dia]).containsKey(horas[hora])) {
                         
                         Horario h = horariosPorDiaYHora.get(dias[dia]).get(horas[hora]);
                         Color color;
                         
-                        // Determinar el color según el estado
                         switch (h.getEstado()) {
                             case "Asignado":
                                 color = COLOR_ASIGNADO;
@@ -191,7 +258,6 @@ public class PanelVisualizarHorario extends JPanel {
                                 color = COLOR_DISPONIBLE;
                         }
                         
-                        // Actualizar la celda con la información del horario
                         celdas[hora][dia] = crearCeldaHorario(
                             h.getEstado(),
                             h.getMateria(),
@@ -201,7 +267,6 @@ public class PanelVisualizarHorario extends JPanel {
                             color
                         );
                         
-                        // Reemplazar la celda en el panel
                         gridPanel.remove(hora * 5 + dia);
                         gridPanel.add(celdas[hora][dia], hora * 5 + dia);
                     }
@@ -213,20 +278,30 @@ public class PanelVisualizarHorario extends JPanel {
         
         // Crear el panel completo del horario
         JPanel completoPanel = new JPanel(new BorderLayout());
+        completoPanel.setBackground(Color.WHITE);
         completoPanel.add(panelDias, BorderLayout.NORTH);
         
-        // Panel para combinar horas y grid
         JPanel centerPanel = new JPanel(new BorderLayout());
+        centerPanel.setBackground(Color.WHITE);
         centerPanel.add(panelHoras, BorderLayout.WEST);
         centerPanel.add(gridPanel, BorderLayout.CENTER);
         
         completoPanel.add(centerPanel, BorderLayout.CENTER);
         
-        // Agregar el panel completo al panel de horario
         panelHorario.add(completoPanel, BorderLayout.CENTER);
         
         // Leyenda de colores
-        JPanel leyendaPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        JPanel leyendaPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 5));
+        leyendaPanel.setBackground(Color.WHITE);
+        leyendaPanel.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createTitledBorder(
+                        BorderFactory.createLineBorder(new Color(52, 58, 64), 2),
+                        "Leyenda",
+                        TitledBorder.LEFT,
+                        TitledBorder.TOP,
+                        new Font("Roboto", Font.BOLD, 14),
+                        new Color(33, 37, 41)),
+                BorderFactory.createEmptyBorder(5, 10, 5, 10)));
         
         agregarLeyendaColor(leyendaPanel, "Asignado", COLOR_ASIGNADO);
         agregarLeyendaColor(leyendaPanel, "Disponible", COLOR_DISPONIBLE);
@@ -235,7 +310,6 @@ public class PanelVisualizarHorario extends JPanel {
         
         panelHorario.add(leyendaPanel, BorderLayout.SOUTH);
         
-        // Actualizar la interfaz
         panelHorario.revalidate();
         panelHorario.repaint();
     }
@@ -243,26 +317,27 @@ public class PanelVisualizarHorario extends JPanel {
     private JPanel crearCeldaHorario(String estado, String materia, int paralelo, String semestre, String carrera, Color color) {
         JPanel celda = new JPanel();
         celda.setLayout(new BoxLayout(celda, BoxLayout.Y_AXIS));
-        celda.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+        celda.setBorder(createRoundedBorder(new Color(52, 58, 64), 10));
         celda.setBackground(color);
+        celda.setPreferredSize(new Dimension(120, 80));
         
-        // Si hay materia, mostrar los detalles
         if (!materia.isEmpty()) {
-            JLabel lblMateria = new JLabel("Materia: " + materia);
-            JLabel lblParalelo = new JLabel("Paralelo: " + paralelo);
-            JLabel lblSemestre = new JLabel("Semestre: " + semestre);
-            JLabel lblCarrera = new JLabel("Carrera: " + carrera);
-            JLabel lblEstado = new JLabel("Estado: " + estado);
+            JLabel lblMateria = new JLabel(materia);
+            JLabel lblParalelo = new JLabel("Par: " + paralelo);
+            JLabel lblSemestre = new JLabel("Sem: " + semestre);
+            JLabel lblCarrera = new JLabel(carrera);
+            JLabel lblEstado = new JLabel(estado);
             
             for (JLabel lbl : new JLabel[]{lblMateria, lblParalelo, lblSemestre, lblCarrera, lblEstado}) {
-                lbl.setFont(new Font("Arial", Font.PLAIN, 10));
+                lbl.setFont(new Font("Roboto", Font.PLAIN, 10));
+                lbl.setForeground(new Color(33, 37, 41));
                 lbl.setAlignmentX(Component.CENTER_ALIGNMENT);
                 celda.add(lbl);
             }
         } else {
-            // Si no hay materia, solo mostrar que está disponible
             JLabel lblDisponible = new JLabel("Disponible");
-            lblDisponible.setFont(new Font("Arial", Font.BOLD, 12));
+            lblDisponible.setFont(new Font("Roboto", Font.BOLD, 12));
+            lblDisponible.setForeground(new Color(33, 37, 41));
             lblDisponible.setAlignmentX(Component.CENTER_ALIGNMENT);
             celda.add(lblDisponible);
         }
@@ -274,11 +349,56 @@ public class PanelVisualizarHorario extends JPanel {
         JPanel colorBox = new JPanel();
         colorBox.setBackground(color);
         colorBox.setPreferredSize(new Dimension(20, 20));
-        colorBox.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+        colorBox.setBorder(createRoundedBorder(new Color(52, 58, 64), 10));
+        
+        JLabel lblTexto = new JLabel(texto);
+        lblTexto.setFont(new Font("Roboto", Font.PLAIN, 12));
+        lblTexto.setForeground(new Color(33, 37, 41));
         
         panel.add(colorBox);
-        panel.add(new JLabel(texto));
-        // Añadir un poco de espacio entre cada elemento de la leyenda
-        panel.add(Box.createHorizontalStrut(15));
+        panel.add(lblTexto);
+        panel.add(Box.createHorizontalStrut(10));
+    }
+    
+    // Agrega efecto hover a los botones
+    private void addHoverEffect(JButton button) {
+        Color originalColor = button.getBackground();
+        Color hoverColor = originalColor.brighter();
+        button.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                button.setBackground(hoverColor);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                button.setBackground(originalColor);
+            }
+        });
+    }
+    
+    // Crea un borde redondeado personalizado
+    private Border createRoundedBorder(Color color, int radius) {
+        return new Border() {
+            @Override
+            public void paintBorder(Component c, Graphics g, int x, int y, int width, int height) {
+                Graphics2D g2 = (Graphics2D) g.create();
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                g2.setColor(color);
+                g2.setStroke(new BasicStroke(2));
+                g2.drawRoundRect(x, y, width - 1, height - 1, radius, radius);
+                g2.dispose();
+            }
+
+            @Override
+            public Insets getBorderInsets(Component c) {
+                return new Insets(radius + 1, radius + 1, radius + 1, radius + 1);
+            }
+
+            @Override
+            public boolean isBorderOpaque() {
+                return true;
+            }
+        };
     }
 }
